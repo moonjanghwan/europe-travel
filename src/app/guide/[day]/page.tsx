@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { getPartForDay, TRAVEL_START } from '@/lib/travel-data'
 import { notFound } from 'next/navigation'
+import GuideContent from '@/components/GuideContent'
 
 async function getGuideContent(day: number) {
   const { data } = await supabase
@@ -97,7 +98,7 @@ export default async function GuideDayPage({ params }: { params: { day: string }
 
         <div className="card">
           {guide?.content ? (
-            <pre className="whitespace-pre-wrap font-sans text-sm text-navy leading-relaxed break-words">{guide.content}</pre>
+            <GuideContent content={guide.content} />
           ) : (
             <div className="text-center py-16">
               <p className="text-4xl mb-3">📋</p>
