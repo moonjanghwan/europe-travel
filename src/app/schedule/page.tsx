@@ -36,7 +36,7 @@ export default function SchedulePage() {
                 return (
                   <Link
                     key={day}
-                    href={`/diary?day=${day}`}
+                    href={`/guide/${day}`}
                     className={`rounded-xl p-3.5 border transition-all hover:shadow-md ${
                       isToday
                         ? 'bg-terracotta text-white border-terracotta shadow-md'
