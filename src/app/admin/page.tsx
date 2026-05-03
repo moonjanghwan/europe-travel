@@ -158,6 +158,19 @@ export default function AdminPage() {
 
       <div className="pt-12 max-w-2xl mx-auto px-4 py-6 pb-20">
 
+        {/* 가이드 수정 카드 */}
+        <Link
+          href="/admin/guide"
+          className="card flex items-center gap-4 mb-5 hover:shadow-md transition-all hover:border-terracotta hover:border-opacity-40 group"
+        >
+          <span className="text-3xl">📖</span>
+          <div className="flex-1">
+            <p className="font-semibold text-navy group-hover:text-terracotta transition-colors">가이드 수정하기</p>
+            <p className="text-xs text-stone mt-0.5">일정·관광지·식당·숙소·팁 수정</p>
+          </div>
+          <span className="text-stone text-sm group-hover:text-terracotta transition-colors">→</span>
+        </Link>
+
         {/* 탭 */}
         <div className="flex gap-1 bg-white rounded-xl p-1 mb-6 border border-stone border-opacity-20">
           {(['diary','script','diaries'] as const).map(tab => (

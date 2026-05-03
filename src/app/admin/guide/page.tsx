@@ -7,6 +7,7 @@ import SpotsTab from './SpotsTab'
 import RestaurantsTab from './RestaurantsTab'
 import AccommodationsTab from './AccommodationsTab'
 import TipsTab from './TipsTab'
+import Link from 'next/link'
 
 const TABS = [
   { id: 'schedules',      label: '🕐 일정' },
@@ -25,12 +26,28 @@ type GuideDay = {
 }
 
 export default function AdminGuidePage() {
+  // ── 로그인 ──────────────────────────────────────────
+  const [authed, setAuthed] = useState(false)
+  const [pw, setPw]         = useState('')
+  const [pwError, setPwError] = useState(false)
+
+  function login() {
+    if (pw === process.env.NEXT_PUBLIC_ADMIN_PW || pw === 'admin1234') {
+      setAuthed(true)
+      setPwError(false)
+    } else {
+      setPwError(true)
+    }
+  }
+
+  // ── 가이드 데이터 ────────────────────────────────────
   const [days, setDays] = useState<GuideDay[]>([])
   const [selectedDay, setSelectedDay] = useState<GuideDay | null>(null)
   const [activeTab, setActiveTab] = useState('schedules')
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
+    if (!authed) return
     supabase
       .from('guide_days')
       .select('id, day_number, travel_date, location, subtitle')
@@ -41,21 +58,60 @@ export default function AdminGuidePage() {
           setSelectedDay(data[0] ?? null)
         }
       })
-  }, [])
+  }, [authed])
+
+  // ── 로그인 화면 ──────────────────────────────────────
+  if (!authed) return (
+    <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+      <div className="card w-full max-w-sm text-center">
+        <p className="text-3xl mb-4">🔐</p>
+        <h1 className="font-display text-2xl font-bold text-navy mb-2">가이드 관리</h1>
+        <p className="text-xs text-stone mb-6">관리자 비밀번호를 입력하세요</p>
+        <input
+          type="password"
+          placeholder="비밀번호 입력"
+          value={pw}
+          onChange={e => setPw(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && login()}
+          className={`w-full border rounded-lg px-4 py-3 mb-3 text-sm outline-none focus:border-terracotta ${
+            pwError ? 'border-red-400' : 'border-stone border-opacity-30'
+          }`}
+        />
+        {pwError && <p className="text-red-500 text-xs mb-3">비밀번호가 틀렸습니다</p>}
+        <button onClick={login} className="btn-primary w-full">로그인</button>
+        <Link href="/" className="block text-xs text-stone mt-4 hover:text-navy">← 홈으로 돌아가기</Link>
+      </div>
+    </div>
+  )
+
+  // ── 관리 화면 ────────────────────────────────────────
 
   return (
     <div className="min-h-screen bg-cream flex flex-col">
       {/* 헤더 */}
-      <header className="bg-navy text-white px-4 py-3 flex items-center gap-3 sticky top-0 z-40">
+      <header className="bg-navy text-white px-3 py-2.5 flex items-center gap-2 sticky top-0 z-40">
         <button
-          className="md:hidden text-white text-xl"
+          className="md:hidden text-white text-xl mr-1"
           onClick={() => setSidebarOpen(v => !v)}
         >☰</button>
-        <span className="font-display text-lg font-bold">가이드 관리</span>
+
+        {/* 왼쪽: 뒤로가기 + 홈 */}
+        <div className="flex items-center gap-2">
+          <Link href="/admin" className="text-xs text-white opacity-70 hover:opacity-100 border border-white border-opacity-20 rounded px-2 py-1">← 일기 관리</Link>
+          <Link href="/" className="text-xs text-white opacity-70 hover:opacity-100 border border-white border-opacity-20 rounded px-2 py-1">🏠 홈</Link>
+        </div>
+
+        {/* 가운데: 제목 */}
+        <span className="flex-1 text-center font-display text-sm font-bold hidden md:block">가이드 관리</span>
+
+        {/* 오른쪽: 미리보기 */}
         {selectedDay && (
-          <span className="ml-2 text-terracotta text-sm font-medium">
-            — Day {selectedDay.day_number} {selectedDay.location}
-          </span>
+          <a
+            href={`/guide/${selectedDay.day_number}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-white opacity-70 hover:opacity-100 border border-white border-opacity-20 rounded px-2 py-1 ml-auto"
+          >👁️ 미리보기</a>
         )}
       </header>
 
