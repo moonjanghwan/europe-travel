@@ -175,7 +175,7 @@ export default function SchedulesTab({ dayId, dayNumber }: { dayId: string; dayN
                         </div>
                       </div>
                     ) : (
-                      <div className="group flex items-start gap-2">
+                      <div className="flex items-start gap-2">
                         <div className="flex-1 min-w-0">
                           {/* 시간 뱃지 + 장소명 */}
                           <div className="flex items-center gap-2 flex-wrap mb-0.5">
@@ -200,8 +200,8 @@ export default function SchedulesTab({ dayId, dayNumber }: { dayId: string; dayN
                             <p className="text-xs text-stone italic mt-0.5 opacity-70">{s.memo}</p>
                           )}
                         </div>
-                        {/* 수정·삭제 버튼 (hover 시 표시) */}
-                        <div className="flex gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {/* 수정·삭제 버튼 — 항상 표시 */}
+                        <div className="flex gap-1 flex-shrink-0">
                           <button
                             onClick={() => startEdit(s)}
                             className="text-xs text-stone hover:text-navy border border-stone border-opacity-30 rounded px-2 py-1 bg-white"
