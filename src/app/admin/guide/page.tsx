@@ -31,8 +31,16 @@ export default function AdminGuidePage() {
   const [pw, setPw]         = useState('')
   const [pwError, setPwError] = useState(false)
 
+  // sessionStorage 먼저 확인
+  useEffect(() => {
+    if (sessionStorage.getItem('admin_authed') === '1') {
+      setAuthed(true)
+    }
+  }, [])
+
   function login() {
     if (pw === process.env.NEXT_PUBLIC_ADMIN_PW || pw === 'admin1234') {
+      sessionStorage.setItem('admin_authed', '1')
       setAuthed(true)
       setPwError(false)
     } else {
